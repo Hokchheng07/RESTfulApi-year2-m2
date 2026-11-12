@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
         newUser.setPassword(request.password());
         newUser.setIsActive(Boolean.TRUE);
 
-        userRepository.selectAll().add(newUser);
+        userRepository.insert(newUser);
 
         return newUser;
     }
