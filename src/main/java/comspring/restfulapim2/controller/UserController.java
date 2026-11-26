@@ -3,8 +3,11 @@ package comspring.restfulapim2.controller;
 
 import comspring.restfulapim2.domain.User;
 import comspring.restfulapim2.dto.UserCreateRequest;
+import comspring.restfulapim2.dto.UserResponse;
 import comspring.restfulapim2.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,14 +21,19 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public Page<UserResponse> getAllUsersWithPagi(
+            @RequestParam (required = false, defaultValue = "0") int pageNumber,
+            @RequestParam (required = false, defaultValue = "25") int pageSize
 
-        return userService.getAllUser();
+    ) {
 
-    };
+        return userService.getAllUserWithPagi(pageNumber, pageSize);
+
+    }
+
 
     @GetMapping("{id}")
-    public  User getUserById(
+    public UserResponse getUserById(
             @PathVariable UUID id
     ){
 
@@ -34,7 +42,7 @@ public class UserController {
     };
 
     @PostMapping
-    public User createUser( @RequestBody UserCreateRequest request){
+    public UserResponse createUser(@Valid @RequestBody UserCreateRequest request){
         return userService.createUser(request);
     }
 

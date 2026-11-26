@@ -1,5 +1,15 @@
 spring:
   application:
     name: restfulApi-m2
+  datasource:
+    url : jdbc:postgresql://localhost:4001/postgres
+    username: m2_user
+    password: m2_pass
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate.hibernate.format_sql: true
 server:
   port: 4141
