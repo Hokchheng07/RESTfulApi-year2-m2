@@ -25,8 +25,27 @@ public class UserInitialization {
         user1.setPassword("Hokchheng0909!");
         user1.setIsActive(Boolean.TRUE);
 
+        User user2 = new User();
+        user2.setName("Leang Seavminh");
+        user2.setUsername("MinhMinh02");
+        user2.setEmail("minhminh02@example.com");
+        user2.setPassword("MinhMinh0909!");
+        user2.setIsActive(Boolean.TRUE);
+
+        User user3 = new User();
+        user3.setName("Men Senghak");
+        user3.setUsername("HakHakii");
+        user3.setEmail("hakiHakk03@example.com");
+        user3.setPassword("Hakihak0909!");
+        user3.setIsActive(Boolean.TRUE);
+
+
+
+
         if(userRepository.count() == 0){
             userRepository.save(user1);
+            userRepository.save(user2);
+            userRepository.save(user3);
         }
 
 

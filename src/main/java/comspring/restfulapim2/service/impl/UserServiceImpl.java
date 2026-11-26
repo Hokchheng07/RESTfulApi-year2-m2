@@ -7,6 +7,9 @@ import comspring.restfulapim2.mapper.UserMapper;
 import comspring.restfulapim2.repository.UserRepository;
 import comspring.restfulapim2.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +26,14 @@ public class UserServiceImpl implements UserService {
     private final UserMapper mapper;
 
     @Override
+    public Page<UserResponse> getAllUserWithPagi(int pageNumber, int pageSize ) {
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        return repository.findAll(pageable).map(mapper::toUserResponse);
+    }
+
+    @Override
     public List<UserResponse> getAllUser() {
         return repository.findAll()
                 .stream()
@@ -36,7 +47,7 @@ public class UserServiceImpl implements UserService {
         return  repository.findById(id)
                 .map(mapper::toUserResponse)
                 .orElseThrow(
-                        ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id : %d cannot be found".formatted(id))
+                        ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User cannot be found")
                 );
     }
 

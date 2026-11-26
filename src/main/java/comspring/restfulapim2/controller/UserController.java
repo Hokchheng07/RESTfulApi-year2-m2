@@ -7,6 +7,7 @@ import comspring.restfulapim2.dto.UserResponse;
 import comspring.restfulapim2.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,11 +21,16 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<UserResponse> getAllUsers() {
+    public Page<UserResponse> getAllUsersWithPagi(
+            @RequestParam (required = false, defaultValue = "0") int pageNumber,
+            @RequestParam (required = false, defaultValue = "0") int pageSize
 
-        return userService.getAllUser();
+    ) {
 
-    };
+        return userService.getAllUserWithPagi(pageNumber, pageSize);
+
+    }
+
 
     @GetMapping("{id}")
     public UserResponse getUserById(
