@@ -2,11 +2,14 @@ package comspring.restfulapim2.service.impl;
 
 import comspring.restfulapim2.domain.User;
 import comspring.restfulapim2.dto.UserCreateRequest;
+import comspring.restfulapim2.dto.UserResponse;
+import comspring.restfulapim2.mapper.UserMapper;
 import comspring.restfulapim2.repository.UserRepository;
 import comspring.restfulapim2.service.UserService;
-import io.swagger.v3.oas.annotations.servers.Server;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,36 +18,50 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepository repository;
+
+    private final UserMapper mapper;
 
     @Override
-    public List<User> getAllUser() {
-        return userRepository.selectAll();
+    public List<UserResponse> getAllUser() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toUserResponse)
+                .toList()
+                ;
     }
 
     @Override
-    public User getByUserId(UUID id) {
-        return userRepository.selectById(id).orElseThrow() ;
+    public UserResponse getByUserId(UUID id) {
+        return  repository.findById(id)
+                .map(mapper::toUserResponse)
+                .orElseThrow(
+                        ()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id : %d cannot be found".formatted(id))
+                );
     }
 
     @Override
     public void deleteById(UUID id) {
-        userRepository.selectAll().removeIf(user -> user.getId().equals(id));
+        if (!repository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+        }
+        repository.deleteById(id);
     }
 
     @Override
-    public User createUser(UserCreateRequest request) {
+    public UserResponse createUser(UserCreateRequest request) {
 
-        User newUser = new User();
-        newUser.setId(UUID.randomUUID());
-        newUser.setName(request.name());
-        newUser.setUsername(request.username());
-        newUser.setPassword(request.password());
+        if(repository.existsByEmail(request.email())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email Already Exists");
+        };
+
+        User newUser = mapper.fromCreateUserRequest(request);
         newUser.setIsActive(Boolean.TRUE);
 
-        userRepository.insert(newUser);
+        repository.save(newUser);
 
-        return newUser;
+        return mapper.toUserResponse(newUser);
+
     }
 
 }

@@ -3,7 +3,9 @@ package comspring.restfulapim2.controller;
 
 import comspring.restfulapim2.domain.User;
 import comspring.restfulapim2.dto.UserCreateRequest;
+import comspring.restfulapim2.dto.UserResponse;
 import comspring.restfulapim2.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,14 +20,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
 
         return userService.getAllUser();
 
     };
 
     @GetMapping("{id}")
-    public  User getUserById(
+    public UserResponse getUserById(
             @PathVariable UUID id
     ){
 
@@ -34,7 +36,7 @@ public class UserController {
     };
 
     @PostMapping
-    public User createUser( @RequestBody UserCreateRequest request){
+    public UserResponse createUser(@Valid @RequestBody UserCreateRequest request){
         return userService.createUser(request);
     }
 

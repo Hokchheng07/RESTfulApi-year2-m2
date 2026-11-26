@@ -10,11 +10,10 @@ import org.mapstruct.Mapper;
 
 public interface UserMapper {
 
-    // Map from domain to DTO
 
     UserResponse toUserResponse(User user);
 
-    // Map from DTO to domain
-    UserCreateRequest fromCreateUserRequest(UserCreateRequest userCreateRequest);
+
+    User fromCreateUserRequest(UserCreateRequest userCreateRequest);
 
 }
