@@ -23,7 +23,7 @@ public class UserController {
     @GetMapping
     public Page<UserResponse> getAllUsersWithPagi(
             @RequestParam (required = false, defaultValue = "0") int pageNumber,
-            @RequestParam (required = false, defaultValue = "0") int pageSize
+            @RequestParam (required = false, defaultValue = "25") int pageSize
 
     ) {
 
